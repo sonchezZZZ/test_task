@@ -50,7 +50,7 @@ jobs:
             if [ -z "$SERVICE_EXISTS" ]; then
               echo "Service does not exist yet, deploying with traffic"
               gcloud run deploy ${{ secrets.APP_NAME }} \
-                --image ${{needs.build.outputs.image}} \
+                --image $IMAGE \
                 --region ${{ secrets.REGION }} \
                 --platform managed \
                 --set-env-vars VERSION=${{ github.sha }}
