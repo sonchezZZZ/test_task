@@ -44,10 +44,9 @@ jobs:
           
       - name: Deploy to Cloud Run
         run: |
-          IMAGE=${{ needs.build.outputs.image }}
-          gcloud run deploy ${{ secrets.APP_NAME }} \
-            --image $IMAGE \
-            --region ${{ secrets.REGION }} \
-            --platform managed \
-            --set-env-vars VERSION=${{ github.sha }} \
-            --no-traffic          
+            gcloud run deploy ${{ secrets.APP_NAME }} \
+              --image ${{ needs.build.outputs.image }} \
+              --region ${{ secrets.REGION }} \
+              --platform managed \
+              --set-env-vars VERSION=${{ github.sha }} \
+              --no-traffic
