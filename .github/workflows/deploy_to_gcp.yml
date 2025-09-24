@@ -28,7 +28,7 @@ jobs:
         id: build
         run: |
           IMAGE=${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}
-          echo "image=$IMAGE" >> $GITHUB_OUTPUT
+          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
           docker build -t $IMAGE .
           docker push $IMAGE     
 
