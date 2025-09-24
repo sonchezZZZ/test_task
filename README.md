@@ -2,4 +2,4 @@
 
 ## Routes
 - /version
-- 
+- /health
