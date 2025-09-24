@@ -45,8 +45,9 @@ jobs:
           
       - name: Deploy to Cloud Run
         run: |
+            IMAGE=${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}
             gcloud run deploy ${{ secrets.APP_NAME }} \
-              --image ${{ needs.build.outputs.image }} \
+              --image $IMAGE \
               --region ${{ secrets.REGION }} \
               --platform managed \
               --set-env-vars VERSION=${{ github.sha }} \
