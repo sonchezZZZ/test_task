@@ -54,6 +54,9 @@ jobs:
                 --region ${{ secrets.REGION }} \
                 --platform managed \
                 --set-env-vars VERSION=${{ github.sha }}
+                --min-instances 1 \
+                --max-instances 3 \
+                --concurrency 80
             else
               echo "Service exists, deploying with no traffic"
               gcloud run deploy ${{ secrets.APP_NAME }} \
@@ -61,6 +64,9 @@ jobs:
                 --region ${{ secrets.REGION }} \
                 --platform managed \
                 --set-env-vars VERSION=${{ github.sha }} \
+                --min-instances 1 \
+                --max-instances 3 \
+                --concurrency 80
                 --no-traffic
             fi
 
