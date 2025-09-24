@@ -17,4 +17,4 @@ def not_found(e):
     return "No route to host", 404  # Mimic network-level message
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 80)))
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
