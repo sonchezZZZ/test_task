@@ -11,7 +11,7 @@ COPY ./src /var/www/html/src
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose the port Cloud Run uses
-EXPOSE 80
+EXPOSE 8080
 
 # Start using Gunicorn
-CMD ["gunicorn", "-b", "0.0.0.0:80", "app:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:8080", "app:app"]
