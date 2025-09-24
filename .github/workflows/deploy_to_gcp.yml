@@ -46,9 +46,22 @@ jobs:
       - name: Deploy to Cloud Run
         run: |
             IMAGE=${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}
-            gcloud run deploy ${{ secrets.APP_NAME }} \
-              --image $IMAGE \
-              --region ${{ secrets.REGION }} \
-              --platform managed \
-              --set-env-vars VERSION=${{ github.sha }} \
-              --no-traffic
+            SERVICE_EXISTS=$(gcloud run services describe ${{ secrets.APP_NAME }} --region ${{ secrets.REGION }} --platform managed --format="value(metadata.name)" || echo "")
+            if [ -z "$SERVICE_EXISTS" ]; then
+              echo "Service does not exist yet, deploying with traffic"
+              gcloud run deploy ${{ secrets.APP_NAME }} \
+                --image $IMAGE \
+                --region ${{ secrets.REGION }} \
+                --platform managed \
+                --set-env-vars VERSION=${{ github.sha }}
+            else
+              echo "Service exists, deploying with no traffic"
+              gcloud run deploy ${{ secrets.APP_NAME }} \
+                --image $IMAGE \
+                --region ${{ secrets.REGION }} \
+                --platform managed \
+                --set-env-vars VERSION=${{ github.sha }} \
+                --no-traffic
+            fi
+
+
