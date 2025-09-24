@@ -3,3 +3,4 @@
 ## Routes
 - /version
 - /health
+- /anypath
