@@ -53,7 +53,7 @@ jobs:
                 --image $IMAGE \
                 --region ${{ secrets.REGION }} \
                 --platform managed \
-                --set-env-vars VERSION=${{ github.sha }}, PORT=80 \
+                --set-env-vars VERSION=${{ github.sha }} \
                 --min-instances 1 \
                 --max-instances 3 \
                 --concurrency 80
@@ -63,7 +63,7 @@ jobs:
                 --image $IMAGE \
                 --region ${{ secrets.REGION }} \
                 --platform managed \
-                --set-env-vars VERSION=${{ github.sha }}, PORT=80 \ 
+                --set-env-vars VERSION=${{ github.sha }} \ 
                 --min-instances 1 \
                 --max-instances 3 \
                 --concurrency 80 \
