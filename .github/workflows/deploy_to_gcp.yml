@@ -1,1 +1,52 @@
+name: Deploy Application
 
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build/Push Docker Image
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.build.outputs.image }}    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          
+      - name: Configure Docker for gcloud
+        run: |
+          gcloud config set project ${{ secrets.PROJECT_ID }}
+          gcloud auth configure-docker gcr.io
+
+      - name: Build and Push Docker image
+        run: |
+          IMAGE=gcr.io/${{ secrets.PROJECT_ID }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}
+          echo "image=$IMAGE" >> $GITHUB_OUTPUT
+          docker build -t $IMAGE .
+          docker push $IMAGE     
+
+  deploy:
+    name: Deploy to Cloud Run
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Set up Google Cloud auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          
+      - name: Deploy to Cloud Run
+        run: |
+          IMAGE=${{ needs.build.outputs.image }}
+          gcloud run deploy ${{ secrets.SERVICE_NAME }} \
+            --image $IMAGE \
+            --region ${{ secrets.REGION }} \
+            --platform managed \
+            --set-env-vars VERSION=${{ github.sha }} \
+            --no-traffic          
